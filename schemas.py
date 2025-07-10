@@ -4,6 +4,32 @@ from datetime import date, datetime
 from enum import Enum
 
 # ===============================================
+# SCHEMAS DE AUTENTICACIÓN
+# ===============================================
+class LoginRequest(BaseModel):
+    email: str = Field(..., description="Email del usuario")
+    password: str = Field(..., min_length=3, description="Contraseña")
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user: dict
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    name: str
+    role: str
+    department: str
+    email: str
+    permissions: Optional[dict] = None
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(..., min_length=3)
+    new_password: str = Field(..., min_length=6)
+    confirm_password: str = Field(..., min_length=6)
+
+# ===============================================
 # SCHEMA SIMPLE PARA PACIENTES (SIN VALIDACIONES COMPLEJAS)
 # ===============================================
 class PatientCreate(BaseModel):
@@ -123,10 +149,6 @@ class EmployeeResponse(BaseModel):
     class Config:
         from_attributes = True
 
-
-# ===============================================
-# AGREGAR AL FINAL DE TU ARCHIVO schemas.py
-# ===============================================
 
 # ===============================================
 # SCHEMAS PARA CITAS
