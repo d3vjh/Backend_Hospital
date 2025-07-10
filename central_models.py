@@ -120,3 +120,36 @@ class Medicamento(CentralBase):
     estado_medicamento = Column(Enum(EstadoMedicamento))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+
+
+class Laboratorio(CentralBase):
+    __tablename__ = "laboratorio"
+    
+    id_laboratorio = Column(Integer, primary_key=True)
+    nombre_laboratorio = Column(String(100), nullable=False)
+    telefono_lab = Column(String(20))
+    email_lab = Column(String(100))
+    pais_origen = Column(String(50))
+    certificacion_fda = Column(Boolean)
+    certificacion_invima = Column(Boolean)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+
+class CategoriaMedicamento(CentralBase):
+    __tablename__ = "categoria_medicamento"
+    
+    id_categoria = Column(Integer, primary_key=True)
+    nombre_categoria = Column(String(50), nullable=False)
+    descripcion_categoria = Column(Text)
+    requiere_receta = Column(Boolean)
+    medicamento_controlado = Column(Boolean)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+
+# En la clase Medicamento, agregar estas líneas al final:
+id_laboratorio = Column(Integer, ForeignKey("laboratorio.id_laboratorio"))
+id_categoria = Column(Integer, ForeignKey("categoria_medicamento.id_categoria"))
+
+# Relaciones (agregar al final de la clase)
+laboratorio = relationship("Laboratorio")
+categoria = relationship("CategoriaMedicamento")

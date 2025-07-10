@@ -122,3 +122,125 @@ class EmployeeResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+# ===============================================
+# AGREGAR AL FINAL DE TU ARCHIVO schemas.py
+# ===============================================
+
+# ===============================================
+# SCHEMAS PARA CITAS
+# ===============================================
+class CitaCreate(BaseModel):
+    cod_pac: int
+    id_emp: int
+    id_tipo_cita: int
+    id_dept: int
+    fecha_cita: str  # YYYY-MM-DD
+    hora_inicio: str  # HH:MM
+    hora_fin: Optional[str] = None
+    motivo_consulta: Optional[str] = None
+    sintomas_principales: Optional[str] = None
+    observaciones_cita: Optional[str] = None
+    prioridad: Optional[str] = "NORMAL"
+
+class CitaUpdate(BaseModel):
+    motivo_consulta: Optional[str] = None
+    sintomas_principales: Optional[str] = None
+    diagnostico_preliminar: Optional[str] = None
+    diagnostico_final: Optional[str] = None
+    observaciones_cita: Optional[str] = None
+    recomendaciones: Optional[str] = None
+    duracion_real_min: Optional[int] = None
+    estado_cita: Optional[str] = None
+    hora_fin: Optional[str] = None
+    requiere_seguimiento: Optional[bool] = None
+    fecha_seguimiento: Optional[str] = None
+
+class CitaResponse(BaseModel):
+    id_cita: int
+    cod_pac: int
+    paciente: Optional[dict] = None
+    empleado: dict
+    tipo_cita: dict
+    departamento: dict
+    fecha_cita: str
+    hora_inicio: str
+    hora_fin: Optional[str] = None
+    duracion_real_min: Optional[int] = None
+    motivo_consulta: Optional[str] = None
+    diagnostico_preliminar: Optional[str] = None
+    estado_cita: str
+    created_at: Optional[str] = None
+    
+    class Config:
+        from_attributes = True
+
+# ===============================================
+# SCHEMAS PARA INTERCONSULTAS
+# ===============================================
+class InterconsultaCreate(BaseModel):
+    cod_pac: int
+    id_emp_solicitante: int
+    dept_destino_nombre: str
+    motivo_interconsulta: str
+    id_cita_origen: Optional[int] = None
+    hallazgos_relevantes: Optional[str] = None
+    pregunta_especifica: Optional[str] = None
+    urgente: Optional[bool] = False
+    fecha_respuesta_esperada: Optional[str] = None
+
+class InterconsultaResponse(BaseModel):
+    id_interconsulta: int
+    cod_pac: int
+    paciente: Optional[dict] = None
+    medico_solicitante: dict
+    dept_destino: str
+    motivo: str
+    urgente: bool
+    fecha_solicitud: str
+    estado: str
+    respuesta: Optional[str] = None
+    
+    class Config:
+        from_attributes = True
+
+# ===============================================
+# SCHEMAS PARA FARMACIA
+# ===============================================
+class MedicamentoSolicitud(BaseModel):
+    nombre_medicamento: str
+    principio_activo: Optional[str] = None
+    concentracion: Optional[str] = None
+    forma_farmaceutica: Optional[str] = None
+    dosis: str
+    frecuencia: str
+    duracion_dias: int
+    cantidad_solicitada: int
+    instrucciones_especiales: Optional[str] = None
+    via_administracion: Optional[str] = None
+    justificacion_medica: Optional[str] = None
+
+class SolicitudPrescripcionCreate(BaseModel):
+    cod_pac: int
+    cod_hist: int
+    id_emp_prescriptor: int
+    diagnostico: str
+    id_cita: Optional[int] = None
+    observaciones_medicas: Optional[str] = None
+    urgente: Optional[bool] = False
+    medicamentos: List[MedicamentoSolicitud]
+
+class SolicitudPrescripcionResponse(BaseModel):
+    id_solicitud: int
+    cod_pac: int
+    paciente: Optional[dict] = None
+    medico: dict
+    diagnostico: str
+    urgente: bool
+    fecha_solicitud: str
+    estado: str
+    total_medicamentos: int
+    
+    class Config:
+        from_attributes = True

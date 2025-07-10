@@ -3,9 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import get_central_db, get_dept_db  # ← AGREGAR ESTO
 from central_models import Paciente  # ← AGREGAR ESTO
 from dept_models import Empleado  # ← AGREGAR ESTO
-from routes import patient_routes  # ← AGREGAR ESTO
+# Importar todas las rutas
 from routes import patient_routes, employee_routes
-
+from routes import appointment_routes, interconsulta_routes, farmacia_routes
 
 
 
@@ -20,14 +20,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ INCLUIR RUTAS DE PACIENTES
+# ✅ INCLUIR TODAS LAS RUTAS
 app.include_router(patient_routes.router, prefix="/patients", tags=["patients"])
 app.include_router(employee_routes.router, prefix="/employees", tags=["employees"])
 
+# ✅ NUEVAS RUTAS DE CITAS, INTERCONSULTAS Y FARMACIA
+app.include_router(appointment_routes.router, prefix="/appointments", tags=["appointments"])
+app.include_router(interconsulta_routes.router, prefix="/interconsultas", tags=["interconsultas"])
+app.include_router(farmacia_routes.router, prefix="/farmacia", tags=["farmacia"])
 
 @app.get("/")
 def read_root():
-    return {"message": "Hospital API funcionando!", "endpoints": ["/patients", "/docs"]}
+    return {
+        "message": "Hospital API funcionando!", 
+        "endpoints": [
+            "/patients", 
+            "/employees", 
+            "/appointments",
+            "/interconsultas",
+            "/farmacia",
+            "/docs"
+        ]
+    }
 
 # ========== PRUEBA TEMPORAL DE CONEXIONES ==========
 @app.on_event("startup")

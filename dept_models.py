@@ -151,3 +151,70 @@ class UsuarioSistema(DeptBase):
     
     # Relaciones
     empleado = relationship("Empleado")
+
+
+class Interconsulta(DeptBase):
+    __tablename__ = "interconsulta"
+    
+    id_interconsulta = Column(Integer, primary_key=True)
+    cod_pac = Column(Integer, nullable=False)
+    id_cita_origen = Column(Integer, ForeignKey("cita.id_cita"))
+    id_emp_solicitante = Column(Integer, ForeignKey("empleado.id_emp"), nullable=False)
+    id_dept_solicitante = Column(Integer, ForeignKey("departamento.id_dept"), nullable=False)
+    dept_destino_nombre = Column(String(100), nullable=False)
+    motivo_interconsulta = Column(Text, nullable=False)
+    hallazgos_relevantes = Column(Text)
+    pregunta_especifica = Column(Text)
+    urgente = Column(Boolean, default=False)
+    fecha_solicitud = Column(Date)
+    fecha_respuesta_esperada = Column(Date)
+    fecha_respuesta_recibida = Column(Date)
+    respuesta_interconsulta = Column(Text)
+    nombre_respondente = Column(String(100))
+    estado_interconsulta = Column(String(20), default='PENDIENTE')
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+    
+    # Relaciones
+    cita_origen = relationship("Cita", foreign_keys=[id_cita_origen])
+    empleado_solicitante = relationship("Empleado", foreign_keys=[id_emp_solicitante])
+
+class SolicitudPrescripcion(DeptBase):
+    __tablename__ = "solicitud_prescripcion"
+    
+    id_solicitud = Column(Integer, primary_key=True)
+    cod_pac = Column(Integer, nullable=False)
+    cod_hist = Column(Integer, nullable=False)
+    id_cita = Column(Integer, ForeignKey("cita.id_cita"))
+    id_emp_prescriptor = Column(Integer, ForeignKey("empleado.id_emp"), nullable=False)
+    diagnostico = Column(String(200), nullable=False)
+    observaciones_medicas = Column(Text)
+    urgente = Column(Boolean, default=False)
+    fecha_solicitud = Column(DateTime)
+    estado_solicitud = Column(String(20), default='ENVIADA')
+    fecha_respuesta_farmacia = Column(DateTime)
+    observaciones_farmacia = Column(Text)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+    
+    # Relaciones
+    cita = relationship("Cita", foreign_keys=[id_cita])
+    empleado_prescriptor = relationship("Empleado", foreign_keys=[id_emp_prescriptor])
+
+class DetalleSolicitudMedicamento(DeptBase):
+    __tablename__ = "detalle_solicitud_medicamento"
+    
+    id_detalle_solicitud = Column(Integer, primary_key=True)
+    id_solicitud = Column(Integer, ForeignKey("solicitud_prescripcion.id_solicitud"), nullable=False)
+    nombre_medicamento = Column(String(100), nullable=False)
+    principio_activo = Column(String(200))
+    concentracion = Column(String(50))
+    forma_farmaceutica = Column(String(50))
+    dosis = Column(String(100), nullable=False)
+    frecuencia = Column(String(100), nullable=False)
+    duracion_dias = Column(Integer, nullable=False)
+    cantidad_solicitada = Column(Integer, nullable=False)
+    instrucciones_especiales = Column(Text)
+    via_administracion = Column(String(50))
+    justificacion_medica = Column(Text)
+    created_at = Column(DateTime)
