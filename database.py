@@ -6,15 +6,30 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# ✅ CONEXIÓN 1: Base de datos CENTRAL (en la nube)
+CENTRAL_DATABASE_URL = os.getenv("CENTRAL_DATABASE_URL")
+central_engine = create_engine(CENTRAL_DATABASE_URL, echo=True)
+CentralSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=central_engine)
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+# ✅ CONEXIÓN 2: Base de datos DEPARTAMENTO (local)
+DEPT_DATABASE_URL = os.getenv("DEPT_DATABASE_URL")
+dept_engine = create_engine(DEPT_DATABASE_URL, echo=True)
+DeptSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=dept_engine)
 
-# Dependency para obtener la sesión de DB
-def get_db():
-    db = SessionLocal()
+# Bases para modelos
+CentralBase = declarative_base()
+DeptBase = declarative_base()
+
+# Dependencies
+def get_central_db():
+    db = CentralSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def get_dept_db():
+    db = DeptSessionLocal()
     try:
         yield db
     finally:
