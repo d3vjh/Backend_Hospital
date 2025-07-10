@@ -4,6 +4,8 @@ from database import get_central_db, get_dept_db  # ← AGREGAR ESTO
 from central_models import Paciente  # ← AGREGAR ESTO
 from dept_models import Empleado  # ← AGREGAR ESTO
 from routes import patient_routes  # ← AGREGAR ESTO
+from routes import patient_routes, employee_routes
+
 
 
 
@@ -20,6 +22,8 @@ app.add_middleware(
 
 # ✅ INCLUIR RUTAS DE PACIENTES
 app.include_router(patient_routes.router, prefix="/patients", tags=["patients"])
+app.include_router(employee_routes.router, prefix="/employees", tags=["employees"])
+
 
 @app.get("/")
 def read_root():

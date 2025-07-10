@@ -69,3 +69,56 @@ class MessageResponse(BaseModel):
 
 class CountResponse(BaseModel):
     total: int
+
+
+# ===============================================
+# SCHEMAS PARA EMPLEADOS (BD DEPARTAMENTO)
+# ===============================================
+class EmployeeCreate(BaseModel):
+    nom_emp: str
+    apellido_emp: str
+    cedula: str
+    email_emp: Optional[str] = None
+    tel_emp: Optional[str] = None
+    dir_emp: Optional[str] = None
+    fecha_contratacion: Optional[str] = None  # String por simplicidad
+    fecha_nacimiento: str  # Requerido
+    id_dept: int
+    id_rol: int
+    numero_licencia: Optional[str] = None
+    especialidad_medica: Optional[str] = None
+    universidad_titulo: Optional[str] = None
+    ano_graduacion: Optional[int] = None
+    turno_preferido: Optional[str] = "DIURNO"
+
+class EmployeeUpdate(BaseModel):
+    nom_emp: Optional[str] = None
+    apellido_emp: Optional[str] = None
+    email_emp: Optional[str] = None
+    tel_emp: Optional[str] = None
+    dir_emp: Optional[str] = None
+    fecha_contratacion: Optional[str] = None
+    fecha_nacimiento: Optional[str] = None
+    especialidad_medica: Optional[str] = None
+    universidad_titulo: Optional[str] = None
+    ano_graduacion: Optional[int] = None
+    turno_preferido: Optional[str] = None
+    estado_empleado: Optional[str] = None
+    id_dept: Optional[int] = None
+    id_rol: Optional[int] = None
+
+class EmployeeResponse(BaseModel):
+    id_emp: int
+    nom_emp: str
+    apellido_emp: str
+    cedula: str
+    email_emp: Optional[str] = None
+    tel_emp: Optional[str] = None
+    especialidad_medica: Optional[str] = None
+    numero_licencia: Optional[str] = None
+    estado_empleado: Optional[str] = None
+    turno_preferido: Optional[str] = None
+    created_at: Optional[str] = None
+    
+    class Config:
+        from_attributes = True
